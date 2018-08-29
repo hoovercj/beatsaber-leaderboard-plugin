@@ -1,28 +1,79 @@
-﻿using System;
+﻿using IllusionPlugin;
+using Steamworks;
+using System;
 using System.Collections;
 using System.IO;
 using System.Text;
 using UnityEngine;
+
 public class PostScoreBehavior : MonoBehaviour
 {
     private static PostScoreBehavior _instance;
 
-    public static void PostScores(string url, byte[] scores)
+    private string scores;
+
+    private string PostUrl
+    {
+        get { return String.Format(SecretProvider.UrlTemplate, this.LeaderboardName); }
+    }
+
+    private string LeaderboardFilePath
+    {
+        get
+        {
+            return String.Format(
+                "{0}\\AppData\\LocalLow\\Hyperbolic Magnetism\\Beat Saber\\LocalLeaderboards.dat",
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+            );
+        }
+    }
+
+    private string ModPrefsKey
+    {
+        get { return "PointSaber"; }
+    }
+
+    private string LeaderboardName
+    {
+        get { return ModPrefs.GetString(this.ModPrefsKey, "LeaderboardName", DefaultLeaderboardName, true); }
+    }
+
+    private string DefaultLeaderboardName
+    {
+        get { return SteamUser.GetSteamID().m_SteamID.ToString(); }
+    }
+
+    private string GetScoresString()
+    {
+        return File.ReadAllText(this.LeaderboardFilePath);
+    }
+
+    public static void PostScores()
     {
         Log("PostScoresBehavior.PostScores()");
         if (_instance == null)
         {
-            _instance = new GameObject("temp").AddComponent<PostScoreBehavior>();
+            _instance = new GameObject("PointSaber").AddComponent<PostScoreBehavior>();
         }
         Log("Call PostScoresRoutine");
-        _instance.StartCoroutine(_instance.PostScoresRoutine(url, scores));
+        _instance.StartCoroutine(_instance.PostScoresRoutine());
     }
 
-    public IEnumerator PostScoresRoutine(string url, byte[] scores)
+    public IEnumerator PostScoresRoutine()
     {
-        using (var www = new WWW(url, scores))
+        var newScores = this.GetScoresString();
+        if (newScores == this.scores)
         {
-            yield return www;
+            Log("Scores haven't changed");
+            yield return null;
+        }
+        else
+        {
+            this.scores = newScores;
+            using (var www = new WWW(this.PostUrl, Encoding.UTF8.GetBytes(this.scores)))
+            {
+                yield return www;
+            }
         }
     }
 
