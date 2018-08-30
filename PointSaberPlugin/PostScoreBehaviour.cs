@@ -35,12 +35,7 @@ public class PostScoreBehavior : MonoBehaviour
 
     private string LeaderboardName
     {
-        get { return ModPrefs.GetString(this.ModPrefsKey, "LeaderboardName", DefaultLeaderboardName, true); }
-    }
-
-    private string DefaultLeaderboardName
-    {
-        get { return SteamUser.GetSteamID().m_SteamID.ToString(); }
+        get { return ModPrefs.GetString(this.ModPrefsKey, "LeaderboardName", Global.defaultLeaderboardId, true); }
     }
 
     private string GetScoresString()

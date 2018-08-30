@@ -3,10 +3,14 @@ using IllusionPlugin;
 using System.Reflection;
 using System.IO;
 using Harmony;
+#if OCULUS
 using Oculus.Platform;
 using Oculus.Platform.Models;
+#else
+using Steamworks;
+#endif
 
-public class BasePlugin : IPlugin
+public class Plugin : IPlugin
 {
     bool loaded;
 
@@ -40,7 +44,7 @@ public class BasePlugin : IPlugin
         if (!loaded)
         {
             loaded = true;
-            this.Initialize();
+            this.PatchAssemblies();
         }
     }
 
@@ -55,11 +59,15 @@ public class BasePlugin : IPlugin
 
     private void Initialize()
     {
+#if OCULUS
         Request<User> oculusRequest = Users.GetLoggedInUser().OnComplete(delegate (Message<User> message)
         {
-            Global.playerId = message.Data.ID.ToString();
+            Global.defaultLeaderboardId = message.Data.ID.ToString();
             PatchAssemblies();
         });
+#else
+        Global.defaultLeaderboardId = SteamUser.GetSteamID().m_SteamID.ToString();
+#endif
     }
 
     private void PatchAssemblies()
@@ -85,5 +93,5 @@ public class BasePlugin : IPlugin
 
 public static class Global
 {
-    public static string playerId;
+    public static string defaultLeaderboardId;
 }

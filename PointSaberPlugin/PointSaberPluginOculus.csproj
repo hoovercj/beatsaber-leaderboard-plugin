@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{604A9C94-E78B-449A-8DC3-4D83842E959B}</ProjectGuid>
+    <ProjectGuid>{D3EFAFAF-7BF6-4E99-9859-9C8D56CA2B6D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PointSaberPluginOculus</RootNamespace>
-    <AssemblyName>PointSaberPlugin</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <AssemblyName>PointSaberPluginOculus</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants>OCULUS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -81,13 +84,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Plugin.cs" />
+    <Compile Include="Patch.cs" />
     <Compile Include="PostScoreBehaviour.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecretProvider.cs">
-      <DependentUpon>SecretProvider.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>SecretProvider.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -102,10 +106,13 @@
       <LastGenOutput>SecretProvider.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- <Target Name="AfterBuild">
+  <Target Name="AfterBuild">
     <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Beat Saber\Plugins" ContinueOnError="false" />
-  </Target> -->
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
