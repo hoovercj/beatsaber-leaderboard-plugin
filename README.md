@@ -20,6 +20,7 @@ Scores can be viewed at https://www.pointsaber.com/
 
 ### Configuration
 By default, the game will upload scores to `http://www.pointsaber.com/#/<YOUR STEAM OR OCULUS ID>`. If you'd like to customize the URL that your scores are available at, modify `modprefs.ini` to have the lines:
+    
     * Steam: `\steamapps\common\Beat Saber\UserData`
     * Oculus: `\Oculus Apps\Software\hyperbolic-magnetism-beat-saber\UserData`
 
